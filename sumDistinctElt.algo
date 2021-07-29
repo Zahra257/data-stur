@@ -1,0 +1,97 @@
+// Solution 1 with arrays //
+ALGORITHM sumDistinct_algo
+
+VAR
+    setA : ARRAY_OF INTEGER[4];
+    setB : ARRAY_OF INTEGER[5];   
+    i,j : INTEGER := 0; 
+    sum : INTEGER :=0; 
+
+BEGIN
+    setA := {3,1,7,9}
+    setB := {2,4,1,9,3} 
+    Read(setA);
+    Read(setB);
+
+    FOR i FROM 0 to setA.length-1 STEP 1 DO
+        j := 0;
+        WHILE (j < setB.length) Do
+            IF (setA[i] <> setB[j]) THEN
+                j := j + 1;
+            ELSE
+                BREAK;
+            END_IF
+        END_WHILE
+        IF (j = setB.length) THEN
+            sum := sum + setA[i];
+        END_IF
+    END_FOR
+
+    FOR i FROM 0 to setB.length-1 STEP 1 DO
+        j := 0;
+        WHILE (j < setA.length) Do
+            IF (setB[i] <> setA[j]) THEN
+                j := j + 1;
+            ELSE
+                BREAK;
+            END_IF
+        END_WHILE
+        IF (j = setA.length) THEN
+            sum := sum + setB[i];
+        END_IF
+    END_FOR
+
+    Write('Sum of all distinct elements from the set equals', sum);
+END
+
+//*******************************************************************************************************************************//
+
+// Solution 2 with HashTable //
+ALGORITHM sumDistinct_algo
+
+VAR
+    setA : ARRAY_OF INTEGER[4];
+    setB : ARRAY_OF INTEGER[5];   
+    i,j : INTEGER := 0; 
+    sum : INTEGER :=0;
+    myhash : HASH_TABLE <INTEGER,INTEGER>; 
+
+BEGIN
+    setA := {3,1,7,9}
+    setB := {2,4,1,9,3} 
+    myhash := {}
+    Read(setA);
+    Read(setB);
+    Read(myhash);
+    
+    FOR i FROM 0 to setA.length-1 STEP 1 DO
+        IF myhash.lookup(setA[i]) = TRUE THEN
+            myhash.insert(setA[i], myhash.get(setA[i]) + 1);
+        ELSE
+            myhash.insert(setA[i], 1);
+        END_IF
+    END_FOR
+
+    FOR i FROM 0 to setB.length-1 STEP 1 DO
+        IF myhash.lookup(setB[i]) = TRUE THEN
+            myhash.insert(setB[i], myhash.get(setB[i]) + 1);
+        ELSE
+            myhash.insert(setB[i], 1);
+        END_IF
+    END_FOR
+
+    FOR i FROM 0 to setA.length-1 STEP 1 DO
+        IF myhash.get(setA[i]) = 1 THEN
+            sum := sum + setA[i];
+        END_IF
+    END_FOR
+
+    FOR i FROM 0 to setB.length-1 STEP 1 DO
+        IF myhash.get(setB[i]) = 1 THEN
+            sum := sum + setB[i];
+        END_IF
+    END_FOR
+
+    Write('Sum of all distinct elements from the set equals', sum);
+
+END
